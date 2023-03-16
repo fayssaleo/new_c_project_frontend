@@ -1,0 +1,167 @@
+.btn {
+  border-radius: 6px;
+  width: 220px;
+  color: rgb(255, 255, 255);
+  padding: 8px;
+}
+.btnAction {
+  border-radius: 6px;
+  width: 100px;
+  color: rgb(255, 255, 255);
+  padding: 8px;
+}
+.settingContainer {
+  display: flex;
+  border: 1px solid #000;
+  height: 45px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  padding: 12px;
+  .username {
+    color: #284066;
+    font-family: "system-ui" !important;
+    padding-right: 8px !important;
+  }
+}
+.title {
+  color: #284066;
+  font-weight: bold !important;
+  font-family: "system-ui" !important;
+}
+h3 {
+  text-align: center;
+}
+
+.linktext {
+  text-decoration: none !important;
+}
+.itemdrawer {
+  text-align: center;
+
+  background-color: #eef9ffc4;
+  text-align: center;
+  border: 1px solid #000;
+  margin: 10px;
+  border-radius: 5px;
+  text-decoration: none !important;
+  .itemd {
+    text-decoration: none !important;
+
+    color: black;
+    font-size: medium;
+    font-weight: bold;
+    font-family: "system-ui";
+    padding-top: 4%;
+    display: block;
+  }
+}
+.itemdrawer:hover {
+  text-align: center;
+
+  background-color: #01a8ca;
+  margin-right: 2px;
+  margin-left: 2px;
+
+  .itemd:hover {
+    color: #fff;
+    text-decoration: none;
+    color: 40px;
+    font-size: larger;
+    font-weight: bold;
+    font-family: "system-ui";
+    padding-top: 3%;
+  }
+}
+.activeDrawer {
+  background-color: #284066 !important;
+  color: rgb(255, 255, 255) !important;
+  font-family: "system-ui";
+  .itemd {
+    padding-top: 6px !important;
+    color: rgb(255, 255, 255) !important;
+    text-decoration: none;
+    color: 40px;
+    font-size: larger;
+    font-weight: bold;
+    font-family: "system-ui" !important;
+    padding-top: 4%;
+  }
+}
+.downloadpicture {
+  text-decoration: none;
+  
+}
+.btnFile {
+  width: 30px;
+  margin-bottom: 4px;
+  margin-left: 4px;
+}
+.claimDateInputField {
+  width: 100%;
+}
+.download {
+  background-color: #7acb7a;
+  color: white;
+  border: 1px solid black;
+  border-radius: 20px;
+  padding: 7px;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+}
+.download:active {
+  background-color: #7acb7a54;
+}
+.change {
+  background-color: #ff0000b0;
+  color: white;
+  border: 1px solid black;
+  border-radius: 20px;
+  padding: 7px;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+}
+
+.change:active {
+  background-color: #ff000070;
+}
+
+.deleteButtonerson:active {
+  background-color: rgba(0, 0, 0, 0.099);
+}
+.fileNameEstimate {
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 4px;
+  border: #000 1px solid;
+}
+.other {
+  .v-input__slot {
+    background-color: red;
+  }
+}
+.tabsSliderMenu {
+  .v-toolbar__content {
+    height: 0 !important;
+  }
+}
+.value_valuationChange{
+  margin-right: 4px;
+  margin-left: 4px;
+  padding-top: 12px;
+  padding-left: 8px;
+  padding-right: 8px;
+
+  height: 55px;
+  border: 2px solid rgb(0, 211, 81);
+  border-radius: 5px;
+  text-align: center;
+}
+
+.alert{
+  width: 400px;
+}

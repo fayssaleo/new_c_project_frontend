@@ -1,0 +1,40 @@
+version: "3.7"
+
+services:
+  # PHP-FPM - Service
+  claims_frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: claims_frontend
+    restart: unless-stopped
+    tty: true
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - ./docker-files/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+
+    networks:
+      - claims_front-network
+
+  # NGINX - Service
+  webserver:
+    image: nginx:stable-alpine as production-stage
+    container_name: claims_frontend_webserver
+    restart: unless-stopped
+    tty: true
+
+    ports:
+      - "9011:80"
+    volumes:
+      - ./:/app
+      - ./docker-files/nginx/conf.d/:/etc/nginx/conf.d/
+
+    networks:
+      - claims_front-network
+
+# Networks
+networks:
+  claims_front-network:
+    driver: bridge
