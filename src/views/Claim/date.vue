@@ -199,10 +199,7 @@ export default {
         )
           this.claimDate = new Date(this.dateClaim.claim_date);
       }
-      console.log(
-        "this.geteditedOrSavedclaim.ClaimOrIncident == ",
-        this.geteditedOrSavedclaim
-      );
+
       if (this.geteditedOrSavedclaim.ClaimOrIncident == "Incident") {
         this.switch1 = true;
       } else {
@@ -217,7 +214,6 @@ export default {
         })
         .catch((err) => {
           this.setModuleShowToFalseAction();
-          console.error("error", err);
         });
     },
     deleteClaimFile(item) {

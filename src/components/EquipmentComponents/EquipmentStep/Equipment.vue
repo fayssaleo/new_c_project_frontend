@@ -4,6 +4,33 @@
       <template>
         <v-container fluid>
           <v-row align="center">
+            <v-col cols="12" class="ma-0 pa-0">
+              <v-row class="ma-0 pa-0">
+                <v-col cols="6" class="ma-0 pa-0"></v-col>
+                <v-col cols="6"
+                  ><div
+                    style="
+                      float: right;
+                      border: 2px solid black;
+                      height: 45px;
+                      padding-top: 8px;
+                      padding: 8px 10px 0px 10px;
+                    "
+                    :class="{
+                      borderOn: EquipmentModel.major,
+                      borderOff: !EquipmentModel.major,
+                    }"
+                  >
+                    <v-switch
+                      class="ma-0 pa-0"
+                      label="Major Element"
+                      :value="EquipmentModel.major"
+                      readonly
+                      @click="openMajor()"
+                    ></v-switch></div
+                ></v-col>
+              </v-row>
+            </v-col>
             <v-col
               cols="12"
               class="m-0 p-0"
@@ -128,6 +155,7 @@
                 dense
                 outlined
                 @change="changeequipmentMatriculesSELECT()"
+                :disabled="EquipmentModel.type_of_equipment.id == 0"
               ></v-select>
             </v-col>
             <v-col
@@ -147,8 +175,10 @@
                 filled
                 color="primary"
                 @change="changeequipmentMatriculesSELECT()"
+                :disabled="EquipmentModel.type_of_equipment.id == 0"
               ></v-select>
             </v-col>
+
             <v-col
               v-if="EquipmentModel.matricule.id == 0"
               class="d-flex"
@@ -159,6 +189,7 @@
                 label="New id Equipement  :"
                 outlined
                 v-model="EquipmentModel.matricule.id_equipment"
+                :disabled="EquipmentModel.type_of_equipment.id == 0"
               ></v-text-field>
             </v-col>
             <v-col class="d-flex" cols="12" sm="6">
@@ -166,6 +197,7 @@
                 label="Matricule :"
                 outlined
                 v-model="EquipmentModel.matricule.matricule"
+                :disabled="EquipmentModel.type_of_equipment.id == 0"
               ></v-text-field>
             </v-col>
             <!---------------------------------------------------------------------------------------------------------------->
@@ -242,18 +274,14 @@
                     class="mr-2"
                   ></v-text-field>
                 </v-col>
-                <v-col
-                  v-if="EquipmentModel.nature_of_damage.id == 0"
-                  class="d-flex"
-                  cols="12"
-                  sm="12"
-                >
+
+                <v-col class="d-flex" cols="12" sm="12">
                   <v-textarea
                     clearable
                     outlined
                     clear-icon="mdi-close-circle"
-                    label="Nature of damage comment"
-                    v-model="EquipmentModel.nature_of_damage_comment"
+                    label="Damage description"
+                    v-model="EquipmentModel.damage_description"
                     value=""
                   ></v-textarea>
                 </v-col>
@@ -544,6 +572,24 @@
               </v-row>
             </v-col>
           </v-row>
+          <v-dialog v-model="majorDialog" max-width="500px">
+            <v-card>
+              <v-card-title v-if="EquipmentModel.major" class="text-h5"
+                >Are you sure you want to make this item not the
+                major?</v-card-title
+              >
+              <v-card-title v-else class="text-h5"
+                >Are you sure you want to make this item the
+                major?</v-card-title
+              >
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color=" darken-1" @click="closeMajor">No</v-btn>
+                <v-btn color="primary darken-1" @click="MakeItMajor">Yes</v-btn>
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-container>
       </template>
     </v-card>
@@ -567,12 +613,15 @@ export default {
       personName: "",
       personName_outsourcer_persons: "",
       personName_thirdparty_persons: "",
+      majorDialog: false,
       EquipmentModel: {
         isNewEquipmentMatricule: false,
         nature_of_damage_comment: "",
         department_id: "",
         cause_damage: "",
+        damage_description: "",
         damage_caused_by: "",
+        major: false,
         type_of_equipment: {
           id: 0,
           name: "",
@@ -675,12 +724,6 @@ export default {
       deep: true,
       handler(newValue, oldvalue) {
         this.set_equipment_claim_SetterAction(newValue).then(() => {});
-        if (
-          oldvalue.type_of_equipment.id == 0 &&
-          newValue.type_of_equipment.id != 0
-        ) {
-          console.log("djdjdjdjdjdjdj");
-        }
       },
     },
   },
@@ -690,12 +733,15 @@ export default {
   methods: {
     initialize() {
       if (this.geteditedOrSavedClaimEquipment.id > 0) {
+        this.EquipmentModel.major = this.geteditedOrSavedClaimEquipment.major;
         this.EquipmentModel.brand.id =
           this.geteditedOrSavedClaimEquipment.brand.id;
         this.EquipmentModel.nature_of_damage.id =
           this.geteditedOrSavedClaimEquipment.nature_of_damage.id;
         this.EquipmentModel.cause_damage =
           this.geteditedOrSavedClaimEquipment.cause_damage;
+        this.EquipmentModel.damage_description =
+          this.geteditedOrSavedClaimEquipment.damage_description;
 
         this.EquipmentModel.type_of_equipment.id =
           this.geteditedOrSavedClaimEquipment.type_of_equipment.id;
@@ -812,7 +858,24 @@ export default {
       "setModuleShowToFalseAction",
       "setequipmentMatriculesAction",
       "setequipmentMatriculeById_eqAction",
+      "makeItMajorEquipmentClaimAction",
+      "makeNotMajorEquipmentClaimAction",
     ]),
+    MakeItMajor() {
+      if (!this.EquipmentModel.major) {
+        this.EquipmentModel.major = true;
+        this.closeMajor();
+      } else {
+        this.EquipmentModel.major = false;
+        this.closeMajor();
+      }
+    },
+    openMajor() {
+      this.majorDialog = true;
+    },
+    closeMajor() {
+      this.majorDialog = false;
+    },
     changedepartmentSELECT() {
       this.isNewDepartment = false;
       this.EquipmentModel.department.map((c) => {
@@ -830,7 +893,7 @@ export default {
         let ThisEquipmentMatricule = this.equipmentMatricules.filter((e) => {
           return e.id == this.EquipmentModel.matricule.id;
         })[0];
-        console.log("ThisEquipmentMatricule", ThisEquipmentMatricule);
+
         this.EquipmentModel.matricule.matricule =
           ThisEquipmentMatricule.matricule;
         this.EquipmentModel.matricule.equipment =
@@ -842,7 +905,6 @@ export default {
         /*this.setequipmentMatriculeById_eqAction(
           this.EquipmentModel.matricule.id
         ).then(() => {
-          console.log("getequipmentMatricule", this.getequipmentMatricule);
           this.EquipmentModel.matricule.matricule =
             this.getequipmentMatricule.matricule;
           this.EquipmentModel.matricule.equipment =
@@ -895,7 +957,6 @@ export default {
       //this.this.EquipmentModel.concerned_internal_department=
     },
     fullfieingTheMatriculesList() {
-      console.log("fullfieingTheMatriculesList ");
       this.setModuleShowToTrueAction();
       this.EquipmentModel.matricule.id = 0;
       this.EquipmentModel.matricule.id_equipment = "";
@@ -931,3 +992,11 @@ export default {
   },
 };
 </script>
+<style lang="scss">
+.borderOn {
+  border-color: #1976d2 !important;
+}
+.borderOff {
+  border-color: #80dda1 !important;
+}
+</style>

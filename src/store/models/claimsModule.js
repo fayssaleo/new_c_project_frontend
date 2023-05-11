@@ -5,6 +5,8 @@ import { toLaravelDatetime, NullTest } from "@/helpers/helpers";
 const claimsModule = {
   state: {
     claims: [],
+    CLAIMS_TO_DOWNLOAD: [],
+    CLAIMS_FILES: [],
     claimfiles: [],
     editedOrSavedclaim: {
       id: 0,
@@ -20,6 +22,143 @@ const claimsModule = {
   mutations: {
     SET_CLAiMS(state, claims) {
       state.claims = claims;
+    },
+    SET_CLAIMS_FILES(state, claims) {
+      state.CLAIMS_FILES = claims;
+    },
+    SET_CLAIMS_TO_DOWNLOAD(state, CLAIMS_TO_DOWNLOAD) {
+      for (let i = 0; i < CLAIMS_TO_DOWNLOAD.length; i++) {
+        for (
+          let index = 0;
+          index < CLAIMS_TO_DOWNLOAD[i].equipments.length;
+          index++
+        ) {
+          if (CLAIMS_TO_DOWNLOAD[i].equipments[index].brand == null) {
+            CLAIMS_TO_DOWNLOAD[i].equipments[index].brand = { id: 0, name: "" };
+          }
+          if (
+            CLAIMS_TO_DOWNLOAD[i].equipments[index].nature_of_damage == null
+          ) {
+            CLAIMS_TO_DOWNLOAD[i].equipments[index].nature_of_damage = {
+              id: 0,
+              name: "",
+            };
+          }
+          if (
+            CLAIMS_TO_DOWNLOAD[i].equipments[index].type_of_equipment == null
+          ) {
+            CLAIMS_TO_DOWNLOAD[i].equipments[index].type_of_equipment = {
+              id: 0,
+              name: "",
+            };
+          }
+          if (CLAIMS_TO_DOWNLOAD[i].equipments[index].companie == null) {
+            CLAIMS_TO_DOWNLOAD[i].equipments[index].companie = {
+              id: 0,
+              name: "",
+            };
+          }
+          if (CLAIMS_TO_DOWNLOAD[i].equipments[index].matricule == null) {
+            CLAIMS_TO_DOWNLOAD[i].equipments[index].matricule = {
+              id: 0,
+              matricule: "",
+              id_equipment: "",
+              equipment: "",
+            };
+          }
+        }
+        for (
+          let index = 0;
+          index < CLAIMS_TO_DOWNLOAD[i].containers.length;
+          index++
+        ) {
+          if (CLAIMS_TO_DOWNLOAD[i].containers[index].shipping_line == null) {
+            CLAIMS_TO_DOWNLOAD[i].containers[index].shipping_line = {
+              id: 0,
+              name: "",
+            };
+          }
+          if (
+            CLAIMS_TO_DOWNLOAD[i].containers[index].nature_of_damage == null
+          ) {
+            CLAIMS_TO_DOWNLOAD[i].containers[index].nature_of_damage = {
+              id: 0,
+              name: "",
+            };
+          }
+          if (CLAIMS_TO_DOWNLOAD[i].containers[index].companie == null) {
+            CLAIMS_TO_DOWNLOAD[i].containers[index].companie = {
+              id: 0,
+              name: "",
+            };
+          }
+        }
+
+        for (
+          let index = 0;
+          index < CLAIMS_TO_DOWNLOAD[i].vessels.length;
+          index++
+        ) {
+          if (CLAIMS_TO_DOWNLOAD[i].vessels[index].nature_of_damage == null) {
+            CLAIMS_TO_DOWNLOAD[i].vessels[index].nature_of_damage = {
+              id: 0,
+              name: "",
+            };
+          }
+          if (CLAIMS_TO_DOWNLOAD[i].vessels[index].shipping_line == null) {
+            CLAIMS_TO_DOWNLOAD[i].vessels[index].shipping_line = {
+              id: 0,
+              name: "",
+            };
+          }
+          if (CLAIMS_TO_DOWNLOAD[i].vessels[index].companie == null) {
+            CLAIMS_TO_DOWNLOAD[i].vessels[index].companie = { id: 0, name: "" };
+          }
+        }
+        for (
+          let index = 0;
+          index < CLAIMS_TO_DOWNLOAD[i].automobiles.length;
+          index++
+        ) {
+          if (CLAIMS_TO_DOWNLOAD[i].automobiles[index].brand == null) {
+            CLAIMS_TO_DOWNLOAD[i].automobiles[index].brand = {
+              id: 0,
+              name: "",
+            };
+          }
+          if (
+            CLAIMS_TO_DOWNLOAD[i].automobiles[index].nature_of_damage == null
+          ) {
+            CLAIMS_TO_DOWNLOAD[i].automobiles[index].nature_of_damage = {
+              id: 0,
+              name: "",
+            };
+          }
+          if (
+            CLAIMS_TO_DOWNLOAD[i].automobiles[index].type_of_equipment == null
+          ) {
+            CLAIMS_TO_DOWNLOAD[i].automobiles[index].type_of_equipment = {
+              id: 0,
+              name: "",
+            };
+          }
+          if (CLAIMS_TO_DOWNLOAD[i].automobiles[index].companie == null) {
+            CLAIMS_TO_DOWNLOAD[i].automobiles[index].companie = {
+              id: 0,
+              name: "",
+            };
+          }
+          if (CLAIMS_TO_DOWNLOAD[i].automobiles[index].matricule == null) {
+            CLAIMS_TO_DOWNLOAD[i].automobiles[index].matricule = {
+              id: 0,
+              matricule: "",
+              id_equipment: "",
+              equipment: "",
+            };
+          }
+        }
+      }
+      state.CLAIMS_TO_DOWNLOAD = CLAIMS_TO_DOWNLOAD;
     },
     SET_CLAiMFILES(state, Claimfiles) {
       state.claimfiles = Claimfiles;
@@ -39,7 +178,6 @@ const claimsModule = {
       });
     },
     set_attr_ClaimOrIncident_CLAiM(state, ClaimOrIncident) {
-      console.log("set_attr_ClaimOrIncident_CLAiM", ClaimOrIncident);
       state.editedOrSavedclaim.ClaimOrIncident = ClaimOrIncident;
     },
     set_attr_without_CLAiM(state, claim) {
@@ -53,7 +191,6 @@ const claimsModule = {
       state.editedOrSavedclaim.type = claim.type;
     },
     set_attr_CLAiM(state, claim) {
-      console.log("set_attr_CLAiM", claim);
       state.editedOrSavedclaim.id =
         claim.id == "" || claim.id == null || claim.id == 0
           ? state.editedOrSavedclaim.id
@@ -83,12 +220,51 @@ const claimsModule = {
     set_incident_report_to_null_SetterAction({ commit }) {
       commit("setIncidentReportToNull");
     },
+    setindexClaimsByMonthAction({ commit }, monthAndYear) {
+      return new Promise((resolve, reject) => {
+        CustomizedAxios.get("claims/indexClaimsByMonth/" + monthAndYear)
+          .then((response) => {
+            commit("SET_CLAiMS", response.data.payload);
+            resolve(response);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    setClaimsFilesAction({ commit }, claims_id) {
+      return new Promise((resolve, reject) => {
+        CustomizedAxios.post("claims/getDownloadsFiles", {
+          id: claims_id,
+        })
+          .then((response) => {
+            commit("SET_CLAIMS_FILES", response.data.payload);
+            resolve(response);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    setindexClaimsByIdsAction({ commit }, claims_id) {
+      return new Promise((resolve, reject) => {
+        CustomizedAxios.post("claims/indexClaimsByIds/", {
+          claims_id: claims_id,
+        })
+          .then((response) => {
+            commit("SET_CLAIMS_TO_DOWNLOAD", response.data.payload);
+            resolve(response);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
     setindexClaimsAction({ commit }) {
       return new Promise((resolve, reject) => {
         CustomizedAxios.get("claims/indexClaims")
           .then((response) => {
             commit("SET_CLAiMS", response.data.payload);
-            console.log("set claims");
             resolve(response);
           })
           .catch((error) => {
@@ -101,7 +277,18 @@ const claimsModule = {
         CustomizedAxios.get("ClaimOrIncidentFile/" + id)
           .then((response) => {
             commit("SET_CLAiMFILES", response.data.payload);
-            console.log("set claims");
+            resolve(response);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    setindexIncidentsByMonthAction({ commit }, monthAndYear) {
+      return new Promise((resolve, reject) => {
+        CustomizedAxios.get("claims/indexIncidentsByMonth/" + monthAndYear)
+          .then((response) => {
+            commit("SET_CLAiMS", response.data.payload);
             resolve(response);
           })
           .catch((error) => {
@@ -114,7 +301,6 @@ const claimsModule = {
         CustomizedAxios.get("claims/indexIncidents")
           .then((response) => {
             commit("SET_CLAiMS", response.data.payload);
-            console.log("set claims");
             resolve(response);
           })
           .catch((error) => {
@@ -162,7 +348,6 @@ const claimsModule = {
         }
         CustomizedAxios.post("claims/create", claimFormData)
           .then((response) => {
-            console.log("res add ", response);
             commit("ADD_CLAiM", response.data.payload);
             resolve(response.data);
           })
@@ -271,6 +456,12 @@ const claimsModule = {
     },
     geteditedOrSavedclaim: (state) => {
       return state.editedOrSavedclaim;
+    },
+    getCLAIMS_TO_DOWNLOAD: (state) => {
+      return state.CLAIMS_TO_DOWNLOAD;
+    },
+    getCLAIMS_FILES: (state) => {
+      return state.CLAIMS_FILES;
     },
   },
 };

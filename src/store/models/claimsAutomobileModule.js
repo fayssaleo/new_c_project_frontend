@@ -13,6 +13,7 @@ const claimsAutomobileModule = {
       department: 0,
       equipement_registration: "",
       cause_damage: "",
+      damage_description: "",
       Liability_letter_number: "",
       amount: null,
       currency: "",
@@ -40,6 +41,7 @@ const claimsAutomobileModule = {
       liability_letter_files: [],
       insurance_declaration_files: [],
       filesDelete: [],
+      major: false,
       type_of_equipment: {
         id: 0,
         name: "",
@@ -68,6 +70,24 @@ const claimsAutomobileModule = {
     liability_letter_files_Data: [],
   },
   mutations: {
+    MAKE_MAJOR_AUTOMOBILE(state, automobile) {
+      for (let index = 0; index < state.automobiles.length; index++) {
+        if (automobile.id != state.automobiles[index].id)
+          state.automobiles[index].major = false;
+        else {
+          state.automobiles[index].major = true;
+          state.editedOrSavedClaimAutomobile.major = true;
+        }
+      }
+    },
+    MAKE_NOT_MAJOR_AUTOMOBILE(state, automobile) {
+      for (let index = 0; index < state.automobiles.length; index++) {
+        if (automobile.id == state.automobiles[index].id) {
+          state.automobiles[index].major = false;
+          state.editedOrSavedClaimAutomobile.major = false;
+        }
+      }
+    },
     SET_AUTMOBILES(state, automobiles) {
       for (let index = 0; index < automobiles.length; index++) {
         if (automobiles[index].brand == null) {
@@ -121,10 +141,12 @@ const claimsAutomobileModule = {
       state.editedOrSavedClaimAutomobile.claim_id = claim_id;
     },
     setAUTOMOBILE_CLAiM(state, equipment) {
+      state.editedOrSavedClaimAutomobile.major = equipment.major;
       state.editedOrSavedClaimAutomobile.type_of_equipment.id =
         equipment.type_of_equipment.id;
       state.editedOrSavedClaimAutomobile.type_of_equipment.name =
         equipment.type_of_equipment.name;
+      state.editedOrSavedClaimAutomobile.major = equipment.major;
 
       state.editedOrSavedClaimAutomobile.brand.id = equipment.brand.id;
       state.editedOrSavedClaimAutomobile.brand.name = equipment.brand.name;
@@ -156,6 +178,8 @@ const claimsAutomobileModule = {
       state.editedOrSavedClaimAutomobile.nature_of_damage.name =
         equipment.nature_of_damage.name;
       state.editedOrSavedClaimAutomobile.cause_damage = equipment.cause_damage;
+      state.editedOrSavedClaimAutomobile.damage_description =
+        equipment.damage_description;
       // state.editedOrSavedClaimAutomobile.department.id = equipment.department.id;
       state.editedOrSavedClaimAutomobile.damage_caused_by =
         equipment.damage_caused_by;
@@ -226,6 +250,7 @@ const claimsAutomobileModule = {
         insurance_followup.insurance_declarationFile;
     },
     setAll_Attr_AUTOMOBILE_CLAiM(state, AutomobileClaim) {
+      state.editedOrSavedClaimAutomobile.major = AutomobileClaim.major;
       state.editedOrSavedClaimAutomobile.id = AutomobileClaim.id;
       state.editedOrSavedClaimAutomobile.claim_id = AutomobileClaim.claim_id;
       state.editedOrSavedClaimAutomobile.department_id = NullTest(
@@ -248,6 +273,8 @@ const claimsAutomobileModule = {
         AutomobileClaim.categorie_of_equipment;
       state.editedOrSavedClaimAutomobile.cause_damage =
         AutomobileClaim.cause_damage;
+      state.editedOrSavedClaimAutomobile.damage_description =
+        AutomobileClaim.damage_description;
       state.editedOrSavedClaimAutomobile.equipement_registration =
         AutomobileClaim.equipement_registration;
       state.editedOrSavedClaimAutomobile.Liability_letter_number =
@@ -324,10 +351,12 @@ const claimsAutomobileModule = {
       state.editedOrSavedClaimAutomobile.id = 0;
       state.editedOrSavedClaimAutomobile.claim_id = 0;
       state.editedOrSavedClaimAutomobile.department_id = 0;
+      state.editedOrSavedClaimAutomobile.major = false;
       state.editedOrSavedClaimAutomobile.categorie_of_equipment = "";
       state.editedOrSavedClaimAutomobile.Deductible_charge_TAT = "";
       state.editedOrSavedClaimAutomobile.categorie_of_equipment = "";
       state.editedOrSavedClaimAutomobile.cause_damage = "";
+      state.editedOrSavedClaimAutomobile.damage_description = "";
       state.editedOrSavedClaimAutomobile.damage_caused_by = "";
       state.editedOrSavedClaimAutomobile.equipement_registration = "";
       state.editedOrSavedClaimAutomobile.Liability_letter_number = "";
@@ -395,7 +424,6 @@ const claimsAutomobileModule = {
   },
   actions: {
     set_liability_letter_to_null_SetterAction({ commit }) {
-      console.log("set_liability_letter_to_null_SetterAction 222");
       commit("setLiabilityLetterToNull");
     },
     set_insurance_declaration_to_null_SetterAction({ commit }) {
@@ -450,14 +478,13 @@ const claimsAutomobileModule = {
     editedOrSavedAutomobileClaimAction({ commit }, automobile) {
       return new Promise((resolve, reject) => {
         var claimFormData = new FormData();
-
+        claimFormData.append("major", automobile.major);
         claimFormData.append("id", automobile.id);
         claimFormData.append("claim_id", NullTest(automobile.claim_id));
         claimFormData.append(
           "department_id",
           NullTest(automobile.department_id)
         );
-
         claimFormData.append(
           "categorie_of_equipment",
           NullTest(automobile.categorie_of_equipment)
@@ -471,6 +498,10 @@ const claimsAutomobileModule = {
           NullTest(automobile.equipement_registration)
         );
         claimFormData.append("cause_damage", NullTest(automobile.cause_damage));
+        claimFormData.append(
+          "damage_description",
+          NullTest(automobile.damage_description)
+        );
         claimFormData.append(
           "Liability_letter_number",
           NullTest(automobile.Liability_letter_number)
@@ -582,13 +613,11 @@ const claimsAutomobileModule = {
         }
         if (automobile.filesDelete?.length > 0) {
           var i = 0;
-
           automobile.filesDelete.map((item) => {
             claimFormData.append(`filesDelete[${i}][id]`, item.id);
             i++;
           });
         }
-
         claimFormData.append(
           "insurance_declaration",
           NullTest(automobile.insurance_declaration)

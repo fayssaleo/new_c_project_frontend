@@ -5,33 +5,6 @@
         <v-container fluid>
           <v-row align="center">
             <!---------------------------------------------------------------------------------------------------------------->
-            <v-col cols="12" class="ma-0 pa-0">
-              <v-row class="ma-0 pa-0">
-                <v-col cols="6" class="ma-0 pa-0"></v-col>
-                <v-col cols="6"
-                  ><div
-                    style="
-                      float: right;
-                      border: 2px solid black;
-                      height: 45px;
-                      padding-top: 8px;
-                      padding: 8px 10px 0px 10px;
-                    "
-                    :class="{
-                      borderOn: shippingLineModel.major,
-                      borderOff: !shippingLineModel.major,
-                    }"
-                  >
-                    <v-switch
-                      class="ma-0 pa-0"
-                      label="Major Element"
-                      :value="shippingLineModel.major"
-                      readonly
-                      @click="openMajor()"
-                    ></v-switch></div
-                ></v-col>
-              </v-row>
-            </v-col>
             <v-col
               cols="12"
               class="m-0 p-0"
@@ -182,7 +155,7 @@
                 class="font-weight-black m-0 p-0"
                 style="margin: 0 !important; padding: 0 !important"
               >
-                Nature :
+                Damage :
               </p></v-col
             >
             <v-col class="d-flex" cols="12" sm="12">
@@ -198,7 +171,7 @@
                     item-text="name"
                     item-value="id"
                     v-model="shippingLineModel.nature_of_damage.id"
-                    label="Nature of damage :"
+                    label="Cause of damage :"
                     dense
                     outlined
                   ></v-select>
@@ -214,7 +187,7 @@
                     item-text="name"
                     item-value="id"
                     v-model="shippingLineModel.nature_of_damage.id"
-                    label="Nature of damage :"
+                    label="Cause of damage :"
                     dense
                     outlined
                     filled
@@ -228,20 +201,25 @@
                   sm="8"
                 >
                   <v-text-field
-                    label="Please specify.."
+                    label="Cause of damage name :"
                     outlined
                     v-model="shippingLineModel.nature_of_damage.name"
                     class="mr-2"
                   ></v-text-field>
                 </v-col>
 
-                <v-col class="d-flex" cols="12" sm="12">
+                <v-col
+                  v-if="shippingLineModel.nature_of_damage.id == 0"
+                  class="d-flex"
+                  cols="12"
+                  sm="12"
+                >
                   <v-textarea
                     clearable
                     outlined
                     clear-icon="mdi-close-circle"
-                    label="Damage description"
-                    v-model="shippingLineModel.damage_description"
+                    label="Cause of damage comment"
+                    v-model="shippingLineModel.nature_of_damage_comment"
                     value=""
                   ></v-textarea>
                 </v-col>
@@ -258,12 +236,12 @@
                 class="font-weight-black m-0 p-0"
                 style="margin: 0 !important; padding: 0 !important"
               >
-                Cause :
+                Nature of damage :
               </p></v-col
             >
             <v-col class="d-flex" cols="12" sm="6">
               <v-text-field
-                label=" Cause of damage:"
+                label=" Nature of damage:"
                 outlined
                 v-model="shippingLineModel.cause_damage"
               ></v-text-field>
@@ -539,24 +517,6 @@
               </v-row>
             </v-col>
           </v-row>
-          <v-dialog v-model="majorDialog" max-width="500px">
-            <v-card>
-              <v-card-title v-if="shippingLineModel.major" class="text-h5"
-                >Are you sure you want to make this item not the
-                major?</v-card-title
-              >
-              <v-card-title v-else class="text-h5"
-                >Are you sure you want to make this item the
-                major?</v-card-title
-              >
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color=" darken-1" @click="closeMajor">No</v-btn>
-                <v-btn color="primary darken-1" @click="MakeItMajor">Yes</v-btn>
-                <v-spacer></v-spacer>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
         </v-container>
       </template>
     </v-card>
@@ -591,7 +551,6 @@ export default {
       toggle: "",
       personName_outsourcer_persons: "",
       personName_thirdparty_persons: "",
-      majorDialog: false,
       shippingLineModel: {
         containerID: "",
         nombre_of_containers: 0,
@@ -602,9 +561,7 @@ export default {
         containerType: "",
         nature_of_damage_comment: "",
         cause_damage: "",
-        damage_description: "",
         damage_caused_by: "",
-        major: false,
         shipping_line: {
           id: 0,
           name: "",
@@ -704,8 +661,6 @@ export default {
       if (this.geteditedOrSavedClaimContainer.id > 0) {
         this.shippingLineModel.categorie_of_container =
           this.geteditedOrSavedClaimContainer.categorie_of_container;
-        this.shippingLineModel.major =
-          this.geteditedOrSavedClaimContainer.major;
         //new
         this.shippingLineModel.containerID =
           this.geteditedOrSavedClaimContainer.containerID;
@@ -737,8 +692,6 @@ export default {
           this.geteditedOrSavedClaimContainer.nature_of_damage.id;
         this.shippingLineModel.cause_damage =
           this.geteditedOrSavedClaimContainer.cause_damage;
-        this.shippingLineModel.damage_description =
-          this.geteditedOrSavedClaimContainer.damage_description;
 
         this.shippingLineModel.damage_caused_by =
           this.geteditedOrSavedClaimContainer.damage_caused_by;
@@ -792,21 +745,6 @@ export default {
       "setModuleShowToFalseAction",
       "setcompaniesContainersAction",
     ]),
-    MakeItMajor() {
-      if (!this.shippingLineModel.major) {
-        this.shippingLineModel.major = true;
-        this.closeMajor();
-      } else {
-        this.shippingLineModel.major = false;
-        this.closeMajor();
-      }
-    },
-    openMajor() {
-      this.majorDialog = true;
-    },
-    closeMajor() {
-      this.majorDialog = false;
-    },
     changedepartmentSELECT() {
       this.isNewDepartment = false;
       this.shippingLineModel.department.map((c) => {

@@ -147,7 +147,6 @@
                   <v-list-item class="itemd"> Claim </v-list-item>
                 </div>
               </router-link>
-             
             </v-list-item-group>
           </v-list>
         </v-list-item-group>
@@ -161,7 +160,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-
+import Swal from "sweetalert2";
 export default {
   name: "ClaimFrontendHome",
 
@@ -218,11 +217,11 @@ export default {
       this.model.id = this.getUserActive.id;
       if (this.model.password == this.Validpassword) {
         this.changePasswordAction(this.model).then(() => {
-        Swal.fire(
-          'Good job!',
-          'Password has been changed successfully',
-          'success'
-        );
+          Swal.fire(
+            "Good job!",
+            "Password has been changed successfully",
+            "success"
+          );
           this.dialog = false;
         });
       } else {

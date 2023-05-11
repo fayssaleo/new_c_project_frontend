@@ -1,7 +1,6 @@
 const moment = require("moment");
 
 export function formatToSimpleFormatDD_MM_YYYY(d) {
-  console.log("lalalalal ", d);
   return moment(d).format("MM/DD/YYYY");
 }
 export function FormatDateStringToISOSimpleEnglishDate(d) {

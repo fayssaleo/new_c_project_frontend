@@ -1,6 +1,12 @@
 <template>
   <div style="padding: 5px; padding-top: 1%">
-    <h3 class="text-uppercase ma-6">{{ createdOrEdited }} THE {{ geteditedOrSavedclaim.ClaimOrIncident }}</h3>
+    <h3 v-if="geteditedOrSavedclaim.id == 0" class="text-uppercase ma-6">
+      {{ createdOrEdited }} THE {{ geteditedOrSavedclaim.ClaimOrIncident }}
+    </h3>
+    <h3 v-else class="text-uppercase ma-6">
+      {{ createdOrEdited }} THE {{ geteditedOrSavedclaim.ClaimOrIncident }} :
+      {{ getClaimSerialNumber(geteditedOrSavedclaim) }}
+    </h3>
 
     <template>
       <v-icon large class="mx-2 ma-2" color="blue darken-2" @click="back()">
@@ -143,6 +149,29 @@ export default {
       "setModuleShowToTrueAction",
       "setModuleShowToFalseAction",
     ]),
+    getClaimSerialNumber(item) {
+      if (this.ClaimOrIncidentValue == "Claim") {
+        if (item.claim_date)
+          return (
+            item.id.toString().padStart(4, "0") +
+            "/" +
+            item.type +
+            "/" +
+            item.claim_date.split("/")[2]
+          );
+        else return item.id.toString().padStart(4, "0") + "/" + item.type + "/";
+      } else {
+        if (item.incident_date)
+          return (
+            item.id.toString().padStart(4, "0") +
+            "/" +
+            item.type +
+            "/" +
+            item.incident_date.split("/")[2]
+          );
+        else return item.id.toString().padStart(4, "0") + "/" + item.type + "/";
+      }
+    },
     initialize() {
       if (this.geteditedOrSavedclaim.id === 0) {
         this.createdOrEdited = "Create";

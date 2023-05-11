@@ -127,8 +127,6 @@
             </v-card>
           </v-dialog>
 
-         
-
           <v-dialog v-model="dialogModifier" max-width="700px">
             <v-card>
               <v-toolbar dark color="primary">
@@ -271,7 +269,7 @@
         </v-btn>
         <v-btn
           color="#545"
-          class="m-2  white--text"
+          class="m-2 white--text"
           @click="resetPassword(item)"
         >
           <v-icon medium> mdi-lock-reset </v-icon>
@@ -286,7 +284,6 @@
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
-
 export default {
   components: {},
   data: () => ({
@@ -318,7 +315,7 @@ export default {
     ],
     users: [],
     profilegroups: [],
-  
+
     departments: [],
     departmentid: null,
     fonctions: [],
@@ -420,7 +417,6 @@ export default {
   },
   methods: {
     initialize() {
-      console.log("initialize");
       this.setUsersAction().then(() => {
         this.users = [...this.getUsers];
       });
@@ -451,7 +447,6 @@ export default {
       this.departmentID = this.editedItem.fonction.department.id;
       this.dialogModifier = true;
     },
-    
 
     deleteItem(item) {
       this.editedIndex = item.id;
@@ -496,7 +491,6 @@ export default {
     opendialogDelete(item) {
       this.UserToProfile.profile_group_id = item.id;
       this.dialogprofilgroupToUser = true;
-      console.log("this.UserToProfile", this.UserToProfile);
     },
 
     closeDelete() {
@@ -504,7 +498,6 @@ export default {
     },
     save() {
       if (this.editedIndex == -1) {
-        console.log("add");
         this.addUserAction(this.editedItem).then(() => {
           this.setUsersAction().then(() => {
             this.users = [...this.getUsers];
@@ -512,7 +505,6 @@ export default {
           this.closemodifier();
         });
       } else {
-        console.log("edite");
         this.editUserAction(this.editedItem).then(() => {
           this.users = [...this.getUsers];
           this.dialogModifier = false;
@@ -530,10 +522,14 @@ export default {
     resetPassword(item) {
       this.resetPasswordAction(item)
         .then(() => {
-          swal("success", "Password has been reset successfully", "success");
+          this.$swal(
+            "success",
+            "Password has been reset successfully",
+            "success"
+          );
         })
         .catch(() => {
-          swal("Error", "", "error");
+          this.$swal("Error", "", "error");
         });
     },
   },

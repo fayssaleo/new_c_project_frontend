@@ -43,6 +43,8 @@ const claimsEquipmentModule = {
       insurance_declaration: null,
       insurance_declarationFile: null,
       ClaimOrIncident: "",
+      damage_description: "",
+      major: false,
       type_of_equipment: {
         id: 0,
         name: "",
@@ -68,9 +70,8 @@ const claimsEquipmentModule = {
       department: [],
       estimate: [],
     },
-    liability_letter_files_Data:[],
-    insurance_declaration_files_Data:[],
-
+    liability_letter_files_Data: [],
+    insurance_declaration_files_Data: [],
   },
   mutations: {
     SET_EQUIPMENTS(state, claims) {
@@ -124,6 +125,7 @@ const claimsEquipmentModule = {
       state.editedOrSavedClaimEquipment.claim_id = claim_id;
     },
     setEQUIPMENT_CLAiM(state, equipment) {
+      state.editedOrSavedClaimEquipment.major = equipment.major;
       state.editedOrSavedClaimEquipment.type_of_equipment.id =
         equipment.type_of_equipment.id;
       state.editedOrSavedClaimEquipment.type_of_equipment.name =
@@ -157,6 +159,8 @@ const claimsEquipmentModule = {
       state.editedOrSavedClaimEquipment.nature_of_damage.name =
         equipment.nature_of_damage.name;
       state.editedOrSavedClaimEquipment.cause_damage = equipment.cause_damage;
+      state.editedOrSavedClaimEquipment.damage_description =
+        equipment.damage_description;
       // state.editedOrSavedClaimEquipment.department.id = equipment.department.id;
       state.editedOrSavedClaimEquipment.damage_caused_by =
         equipment.damage_caused_by;
@@ -219,13 +223,14 @@ const claimsEquipmentModule = {
       state.editedOrSavedClaimEquipment.Complementary_indemnification =
         insurance_followup.Complementary_indemnification;
 
-        state.editedOrSavedClaimEquipment.insurance_declaration_files =
+      state.editedOrSavedClaimEquipment.insurance_declaration_files =
         insurance_followup.insurance_declaration_files;
-        
+
       state.editedOrSavedClaimEquipment.filesDelete =
-      insurance_followup.filesDelete;
+        insurance_followup.filesDelete;
     },
     setAll_Attr_EQUIPMENT_CLAiM(state, EquipmentClaim) {
+      state.editedOrSavedClaimEquipment.major = EquipmentClaim.major;
       state.editedOrSavedClaimEquipment.id = EquipmentClaim.id;
       state.editedOrSavedClaimEquipment.claim_id = EquipmentClaim.claim_id;
       state.editedOrSavedClaimEquipment.department_id = NullTest(
@@ -246,6 +251,8 @@ const claimsEquipmentModule = {
 
       state.editedOrSavedClaimEquipment.cause_damage =
         EquipmentClaim.cause_damage;
+      state.editedOrSavedClaimEquipment.damage_description =
+        EquipmentClaim.damage_description;
       state.editedOrSavedClaimEquipment.equipement_registration =
         EquipmentClaim.equipement_registration;
       state.editedOrSavedClaimEquipment.Liability_letter_number =
@@ -326,8 +333,9 @@ const claimsEquipmentModule = {
       state.editedOrSavedClaimEquipment.id = 0;
       state.editedOrSavedClaimEquipment.claim_id = 0;
       state.editedOrSavedClaimEquipment.department_id = 0;
-
+      state.editedOrSavedClaimEquipment.major = false;
       state.editedOrSavedClaimEquipment.cause_damage = "";
+      state.editedOrSavedClaimEquipment.damage_description = "";
       state.editedOrSavedClaimEquipment.damage_caused_by = "";
       state.editedOrSavedClaimEquipment.equipement_registration = "";
       state.editedOrSavedClaimEquipment.Liability_letter_number = "";
@@ -349,8 +357,8 @@ const claimsEquipmentModule = {
       state.editedOrSavedClaimEquipment.department = [];
       state.editedOrSavedClaimEquipment.incident_report = null;
       state.editedOrSavedClaimEquipment.incident_reportFile = null;
-      state.editedOrSavedClaimEquipment.liability_letter_files =[];
-      state.editedOrSavedClaimEquipment.insurance_declaration_files =[];
+      state.editedOrSavedClaimEquipment.liability_letter_files = [];
+      state.editedOrSavedClaimEquipment.insurance_declaration_files = [];
 
       state.editedOrSavedClaimEquipment.insurance_declaration = null;
       state.editedOrSavedClaimEquipment.insurance_declarationFile = null;
@@ -384,10 +392,13 @@ const claimsEquipmentModule = {
     setInsuranceDeclarationToNull(state) {
       state.editedOrSavedClaimEquipment.insurance_declaration = "";
     },
-    set_liability_letter_files_Data(state,liability_letter_files_Data){
+    set_liability_letter_files_Data(state, liability_letter_files_Data) {
       state.liability_letter_files_Data = liability_letter_files_Data;
     },
-    set_insurance_declaration_files_Data(state,insurance_declaration_files_Data){
+    set_insurance_declaration_files_Data(
+      state,
+      insurance_declaration_files_Data
+    ) {
       state.insurance_declaration_files_Data = insurance_declaration_files_Data;
     },
   },
@@ -425,7 +436,10 @@ const claimsEquipmentModule = {
     },
     setliability_letter_files_DataAction({ commit }, liability_letter_files) {
       return new Promise((resolve, reject) => {
-        CustomizedAxios.post("LiabilityInsuranceFiles/equipment" , liability_letter_files)
+        CustomizedAxios.post(
+          "LiabilityInsuranceFiles/equipment",
+          liability_letter_files
+        )
           .then((response) => {
             commit("set_liability_letter_files_Data", response.data.payload);
             resolve(response);
@@ -451,6 +465,7 @@ const claimsEquipmentModule = {
       return new Promise((resolve, reject) => {
         var claimFormData = new FormData();
 
+        claimFormData.append("major", claim.major);
         claimFormData.append("id", claim.id);
         claimFormData.append("claim_id", claim.claim_id);
         claimFormData.append("department_id", NullTest(claim.department_id));
@@ -464,6 +479,10 @@ const claimsEquipmentModule = {
           NullTest(claim.equipement_registration)
         );
         claimFormData.append("cause_damage", NullTest(claim.cause_damage));
+        claimFormData.append(
+          "damage_description",
+          NullTest(claim.damage_description)
+        );
         claimFormData.append(
           "Liability_letter_number",
           NullTest(claim.Liability_letter_number)
@@ -554,13 +573,11 @@ const claimsEquipmentModule = {
           NullTest(claim.incident_reportFile)
         );
 
-
         if (claim.liability_letter_files?.length > 0) {
           var i = 0;
           claim.liability_letter_files.map((item) => {
             claimFormData.append(`liability_letter_files[${i}]`, item);
             i++;
-
           });
         }
         if (claim.insurance_declaration_files?.length > 0) {
@@ -568,7 +585,6 @@ const claimsEquipmentModule = {
           claim.insurance_declaration_files.map((item) => {
             claimFormData.append(`insurance_declaration_files[${i}]`, item);
             i++;
-
           });
         }
         if (claim.filesDelete?.length > 0) {
@@ -630,7 +646,6 @@ const claimsEquipmentModule = {
             resolve(response.data.message);
           })
           .catch((error) => {
-           // console.error('tag', error);
             reject(error.response.data);
           });
       });

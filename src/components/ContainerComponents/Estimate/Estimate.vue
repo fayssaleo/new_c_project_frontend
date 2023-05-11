@@ -388,6 +388,8 @@ export default {
     switch1: false,
     NameValuation: "",
     listNameValuations: [
+      "Costs of repair",
+      "Costs of cargo",
       "Equipment purchase costs",
       "Installation and facilities costs",
       "Transportation costs",
@@ -578,7 +580,6 @@ export default {
         })
         .catch((err) => {
           this.setModuleShowToFalseAction();
-          console.error("error", err);
         });
     },
     ...mapActions([
@@ -602,7 +603,6 @@ export default {
 
     addToListTextFields(data) {
       this.textFields.push(data);
-      console.info("this.textFields", this.textFields);
     },
     TemporaryOrPermanent() {
       if (this.switch1 == false) {
@@ -615,7 +615,7 @@ export default {
       this.editedItem.container_id = this.geteditedOrSavedClaimContainer.id;
       this.TemporaryOrPermanent();
       this.editedItem.otherValuations = this.otherValuations;
-      console.log("estimate file test", this.editedItem);
+
       this.setModuleShowToTrueAction();
       this.addestimateContainerAction(this.editedItem)
         .then((resolve) => {
@@ -633,7 +633,6 @@ export default {
           this.setModuleShowToFalseAction();
         })
         .catch((err) => {
-          console.error("error addestimateContainerAction", err);
           this.setModuleShowToFalseAction();
         });
       this.close();
@@ -644,7 +643,6 @@ export default {
         this.estimateUpdate.estimate.otherValuations;
 
       this.TemporaryOrPermanent();
-      console.info("this.editedItem", this.editedItem);
       var modelUpdate = {
         estimate: {
           id: this.editedItem.id,
@@ -661,7 +659,7 @@ export default {
         estimate_amount: this.totalAmount,
         deleteInputs: this.deleteInputs,
       };
-      console.log("modelUpdate", modelUpdate);
+
       this.setModuleShowToTrueAction();
       this.editestimateContainerAction(modelUpdate)
         .then((resolve) => {
@@ -684,7 +682,6 @@ export default {
           this.setModuleShowToFalseAction();
         })
         .catch((err) => {
-          console.log("err", err);
           this.setModuleShowToFalseAction();
         });
       this.dialog = false;
@@ -704,7 +701,6 @@ export default {
         this.switch1 = true;
       }
 
-      console.log("item update customed_field", item);
       this.estimateUpdate = item;
 
       //
@@ -739,7 +735,6 @@ export default {
         })
         .catch((err) => {
           this.setModuleShowToFalseAction();
-          console.error("error", err);
         });
       this.setModuleShowToFalseAction();
 
@@ -753,7 +748,6 @@ export default {
         })
         .catch((err) => {
           this.setModuleShowToFalseAction();
-          console.error("error", err);
         });
     },
     deleteItem(item) {
@@ -767,7 +761,6 @@ export default {
       this.addEstimate();
     },
     deleteItemConfirm() {
-      console.log("estimateDelete", this.estimateDelete);
       this.setModuleShowToTrueAction();
       this.deleteestimateAction(this.estimateDelete)
         .then(() => {
@@ -804,7 +797,7 @@ export default {
       if (this.isAdd == true) {
         //this.addeItem();
         this.isAdd = false;
-        console.log("add", "");
+
         setTimeout(() => {
           //this.LoadingPage = false;
         }, 2000);
@@ -812,7 +805,6 @@ export default {
       } else {
         // this.updateEstimate();
 
-        console.log("update", "");
         //this.LoadingPage = true;
 
         setTimeout(() => {
@@ -847,7 +839,6 @@ export default {
           });
         })
         .catch((err) => {
-          console.error("error", err);
           this.setModuleShowToFalseAction();
         });
 
@@ -873,9 +864,7 @@ export default {
             return c.id != item.id;
           }
         );
-      } catch (error) {
-        console.error("error", error);
-      }
+      } catch (error) {}
     },
     editOtherValuation(item) {
       this.otherValuationModel.id = item.id;
@@ -899,7 +888,6 @@ export default {
         })
         .catch((err) => {
           this.setModuleShowToFalseAction();
-          console.error("error", err);
         });
     },
     deleteOtherValuation(item) {
@@ -922,8 +910,6 @@ export default {
           });
         })
         .catch(() => {
-          console.error("error", err);
-
           this.setModuleShowToFalseAction();
         });
       this.setModuleShowToFalseAction();

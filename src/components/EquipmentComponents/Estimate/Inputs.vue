@@ -38,7 +38,6 @@ export default {
   methods: {
     initialize() {},
     removeInputEstimate(item) {
-      console.info("remove", item);
       this.refreshInputEstimate(item.id);
     },
   },

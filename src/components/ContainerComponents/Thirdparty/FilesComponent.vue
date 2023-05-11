@@ -47,7 +47,6 @@ export default {
   methods: {
     initialize() {},
     removefileEstimate(item) {
-      console.info("remove", item);
       this.deleteFile(item);
     },
   },

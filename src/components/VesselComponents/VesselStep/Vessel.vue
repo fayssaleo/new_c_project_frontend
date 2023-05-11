@@ -4,6 +4,33 @@
       <template>
         <v-container fluid>
           <v-row align="center">
+            <v-col cols="12" class="ma-0 pa-0">
+              <v-row class="ma-0 pa-0">
+                <v-col cols="6" class="ma-0 pa-0"></v-col>
+                <v-col cols="6"
+                  ><div
+                    style="
+                      float: right;
+                      border: 2px solid black;
+                      height: 45px;
+                      padding-top: 8px;
+                      padding: 8px 10px 0px 10px;
+                    "
+                    :class="{
+                      borderOn: VesselModel.major,
+                      borderOff: !VesselModel.major,
+                    }"
+                  >
+                    <v-switch
+                      class="ma-0 pa-0"
+                      label="Major Element"
+                      :value="VesselModel.major"
+                      readonly
+                      @click="openMajor()"
+                    ></v-switch></div
+                ></v-col>
+              </v-row>
+            </v-col>
             <v-col
               cols="12"
               class="m-0 p-0"
@@ -134,18 +161,13 @@
                   ></v-text-field>
                 </v-col>
 
-                <v-col
-                  v-if="VesselModel.nature_of_damage.id == 0"
-                  class="d-flex"
-                  cols="12"
-                  sm="12"
-                >
+                <v-col class="d-flex" cols="12" sm="12">
                   <v-textarea
                     clearable
                     outlined
                     clear-icon="mdi-close-circle"
-                    label="Nature of damage comment"
-                    v-model="VesselModel.nature_of_damage_comment"
+                    label="Damage description"
+                    v-model="VesselModel.damage_description"
                     value=""
                   ></v-textarea>
                 </v-col>
@@ -436,6 +458,24 @@
               </v-row>
             </v-col>
           </v-row>
+          <v-dialog v-model="majorDialog" max-width="500px">
+            <v-card>
+              <v-card-title v-if="VesselModel.major" class="text-h5"
+                >Are you sure you want to make this item not the
+                major?</v-card-title
+              >
+              <v-card-title v-else class="text-h5"
+                >Are you sure you want to make this item the
+                major?</v-card-title
+              >
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color=" darken-1" @click="closeMajor">No</v-btn>
+                <v-btn color="primary darken-1" @click="MakeItMajor">Yes</v-btn>
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-container>
       </template>
     </v-card>
@@ -461,11 +501,14 @@ export default {
       personName: "",
       personName_outsourcer_persons: "",
       personName_thirdparty_persons: "",
+      majorDialog: false,
       VesselModel: {
         vessel_number: "",
         nature_of_damage_comment: "",
         cause_damage: "",
+        damage_description: "",
         damage_caused_by: "",
+        major: false,
         shipping_line: {
           id: 0,
           name: "",
@@ -535,7 +578,6 @@ export default {
       "getnatureOfDamages",
       "getdepartements",
       "getcompanies",
-
     ]),
   },
   watch: {
@@ -551,18 +593,17 @@ export default {
   },
   methods: {
     initialize() {
-      console.warn(
-        "geteditedOrSavedClaimVessel",
-        this.geteditedOrSavedClaimVessel
-      );
       if (this.geteditedOrSavedClaimVessel.id > 0) {
         this.VesselModel.categorie_of_vessel =
           this.geteditedOrSavedClaimVessel.categorie_of_vessel;
+        this.VesselModel.major = this.geteditedOrSavedClaimVessel.major;
 
         this.VesselModel.nature_of_damage.id =
           this.geteditedOrSavedClaimVessel.nature_of_damage.id;
         this.VesselModel.cause_damage =
           this.geteditedOrSavedClaimVessel.cause_damage;
+        this.VesselModel.damage_description =
+          this.geteditedOrSavedClaimVessel.damage_description;
         this.VesselModel.vessel_number =
           this.geteditedOrSavedClaimVessel.vessel_number;
         this.VesselModel.shipping_line.id =
@@ -571,7 +612,7 @@ export default {
         this.VesselModel.damage_caused_by =
           this.geteditedOrSavedClaimVessel.damage_caused_by;
 
-          this.VesselModel.companie.id =
+        this.VesselModel.companie.id =
           this.geteditedOrSavedClaimVessel.companie.id;
         this.VesselModel.companie.name =
           this.geteditedOrSavedClaimVessel.companie.name;
@@ -622,8 +663,22 @@ export default {
       "set_vessel_claim_SetterAction",
       "setshippingLinesAction",
       "setcompaniesVesselsAction",
-
     ]),
+    MakeItMajor() {
+      if (!this.VesselModel.major) {
+        this.VesselModel.major = true;
+        this.closeMajor();
+      } else {
+        this.VesselModel.major = false;
+        this.closeMajor();
+      }
+    },
+    openMajor() {
+      this.majorDialog = true;
+    },
+    closeMajor() {
+      this.majorDialog = false;
+    },
     changedepartmentSELECT() {
       this.isNewDepartment = false;
       this.VesselModel.department.map((c) => {

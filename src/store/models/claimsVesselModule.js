@@ -11,6 +11,7 @@ const claimsVesselModule = {
       concerned_internal_department: "",
       equipement_registration: "",
       cause_damage: "",
+      damage_description: "",
       Liability_letter_number: "",
       amount: null,
       currency: "",
@@ -42,6 +43,8 @@ const claimsVesselModule = {
       filesDelete: [],
       insurance_declaration: null,
       insurance_declarationFile: null,
+      major: false,
+      vessel_number: "",
       shipping_line: {
         id: 0,
         name: "",
@@ -99,6 +102,7 @@ const claimsVesselModule = {
       state.editedOrSavedClaimVessel.claim_id = claim_id;
     },
     setVESSEL_CLAiM(state, vessel) {
+      state.editedOrSavedClaimVessel.major = vessel.major;
       state.editedOrSavedClaimVessel.shipping_line.id = vessel.shipping_line.id;
       state.editedOrSavedClaimVessel.shipping_line.name =
         vessel.shipping_line.name;
@@ -113,6 +117,8 @@ const claimsVesselModule = {
       state.editedOrSavedClaimVessel.nature_of_damage.name =
         vessel.nature_of_damage.name;
       state.editedOrSavedClaimVessel.cause_damage = vessel.cause_damage;
+      state.editedOrSavedClaimVessel.damage_description =
+        vessel.damage_description;
       // state.editedOrSavedClaimVessel.department.id = vessel.department.id;
       state.editedOrSavedClaimVessel.damage_caused_by = vessel.damage_caused_by;
 
@@ -175,10 +181,11 @@ const claimsVesselModule = {
 
       state.editedOrSavedClaimVessel.insurance_declarationFile =
         insurance_followup.insurance_declarationFile;
-        state.editedOrSavedClaimVessel.insurance_declaration_files =
+      state.editedOrSavedClaimVessel.insurance_declaration_files =
         insurance_followup.insurance_declaration_files;
     },
     setAll_Attr_VESSEL_CLAiM(state, VesselClaim) {
+      state.editedOrSavedClaimVessel.major = VesselClaim.major;
       state.editedOrSavedClaimVessel.id = VesselClaim.id;
       state.editedOrSavedClaimVessel.claim_id = VesselClaim.claim_id;
       state.editedOrSavedClaimVessel.categorie_of_vessel =
@@ -188,6 +195,9 @@ const claimsVesselModule = {
       state.editedOrSavedClaimVessel.categorie_of_vessel =
         VesselClaim.categorie_of_vessel;
       state.editedOrSavedClaimVessel.cause_damage = VesselClaim.cause_damage;
+      state.editedOrSavedClaimVessel.vessel_number = VesselClaim.vessel_number;
+      state.editedOrSavedClaimVessel.damage_description =
+        VesselClaim.damage_description;
       state.editedOrSavedClaimVessel.equipement_registration =
         VesselClaim.equipement_registration;
       state.editedOrSavedClaimVessel.Liability_letter_number =
@@ -245,10 +255,10 @@ const claimsVesselModule = {
       state.editedOrSavedClaimVessel.incident_reportFile = null;
 
       state.editedOrSavedClaimVessel.liability_letter_files =
-      VesselClaim.liability_letter_files;
+        VesselClaim.liability_letter_files;
 
       state.editedOrSavedClaimVessel.insurance_declaration_files =
-      VesselClaim.insurance_declaration_files;
+        VesselClaim.insurance_declaration_files;
 
       state.editedOrSavedClaimVessel.TAT_name_persons =
         VesselClaim.TAT_name_persons;
@@ -260,12 +270,15 @@ const claimsVesselModule = {
         VesselClaim.concerned_internal_department;
     },
     emptyAll_Attr_VESSEL_CLAiM(state) {
+      state.editedOrSavedClaimVessel.major = false;
       state.editedOrSavedClaimVessel.id = 0;
       state.editedOrSavedClaimVessel.claim_id = 0;
       state.editedOrSavedClaimVessel.categorie_of_vessel = "";
       state.editedOrSavedClaimVessel.Deductible_charge_TAT = "";
       state.editedOrSavedClaimVessel.categorie_of_vessel = "";
       state.editedOrSavedClaimVessel.cause_damage = "";
+      state.editedOrSavedClaimVessel.vessel_number = "";
+      state.editedOrSavedClaimVessel.damage_description = "";
       state.editedOrSavedClaimVessel.damage_caused_by = "";
       state.editedOrSavedClaimVessel.equipement_registration = "";
       state.editedOrSavedClaimVessel.Liability_letter_number = "";
@@ -285,9 +298,9 @@ const claimsVesselModule = {
       state.editedOrSavedClaimVessel.companie.name = "";
 
       state.editedOrSavedClaimVessel.department = [];
-      state.editedOrSavedClaimVessel.liability_letter_files =[];
-      state.editedOrSavedClaimVessel.insurance_declaration_files =[];
-      state.editedOrSavedClaimVessel.liability_letter_files_Data =[];
+      state.editedOrSavedClaimVessel.liability_letter_files = [];
+      state.editedOrSavedClaimVessel.insurance_declaration_files = [];
+      state.editedOrSavedClaimVessel.liability_letter_files_Data = [];
       state.editedOrSavedClaimVessel.liability_letter = null;
       state.editedOrSavedClaimVessel.liability_letterFile = null;
       state.editedOrSavedClaimVessel.insurance_declaration = null;
@@ -317,11 +330,13 @@ const claimsVesselModule = {
     setInsuranceDeclarationToNull(state) {
       state.editedOrSavedClaimVessel.insurance_declaration = "";
     },
-    set_liability_letter_files_Data_vessel(state,liability_letter_files_Data){
+    set_liability_letter_files_Data_vessel(state, liability_letter_files_Data) {
       state.liability_letter_files_Data = liability_letter_files_Data;
-
     },
-    set_insurance_declaration_files_Data_vessel(state,insurance_declaration_files_Data){
+    set_insurance_declaration_files_Data_vessel(
+      state,
+      insurance_declaration_files_Data
+    ) {
       state.insurance_declaration_files_Data = insurance_declaration_files_Data;
     },
   },
@@ -357,11 +372,20 @@ const claimsVesselModule = {
           });
       });
     },
-    setliability_letter_files_Data_vesselAction({ commit }, liability_letter_files) {
+    setliability_letter_files_Data_vesselAction(
+      { commit },
+      liability_letter_files
+    ) {
       return new Promise((resolve, reject) => {
-        CustomizedAxios.post("LiabilityInsuranceFiles/vessel" , liability_letter_files)
+        CustomizedAxios.post(
+          "LiabilityInsuranceFiles/vessel",
+          liability_letter_files
+        )
           .then((response) => {
-            commit("set_liability_letter_files_Data_vessel", response.data.payload);
+            commit(
+              "set_liability_letter_files_Data_vessel",
+              response.data.payload
+            );
             resolve(response);
           })
           .catch((error) => {
@@ -373,6 +397,7 @@ const claimsVesselModule = {
       return new Promise((resolve, reject) => {
         var claimFormData = new FormData();
 
+        claimFormData.append("major", claim.major);
         claimFormData.append("id", claim.id);
         claimFormData.append("claim_id", NullTest(claim.claim_id));
 
@@ -389,6 +414,11 @@ const claimsVesselModule = {
           NullTest(claim.equipement_registration)
         );
         claimFormData.append("cause_damage", NullTest(claim.cause_damage));
+        claimFormData.append("vessel_number", NullTest(claim.vessel_number));
+        claimFormData.append(
+          "damage_description",
+          NullTest(claim.damage_description)
+        );
         claimFormData.append(
           "Liability_letter_number",
           NullTest(claim.Liability_letter_number)
@@ -490,7 +520,6 @@ const claimsVesselModule = {
           claim.insurance_declaration_files.map((item) => {
             claimFormData.append(`insurance_declaration_files[${i}]`, item);
             i++;
-
           });
         }
         if (claim.filesDelete?.length > 0) {

@@ -17,6 +17,7 @@ const claimsContainerModule = {
       concerned_internal_department: "",
       equipement_registration: "",
       cause_damage: "",
+      damage_description: "",
       Liability_letter_number: "",
       amount: null,
       currency: "",
@@ -33,7 +34,7 @@ const claimsContainerModule = {
       Indemnification_of_insurer: "",
       Indemnification_date: "",
       currency_indemnisation: "",
-      deductible_charge_TAT: 5000,
+      deductible_charge_TAT: 0,
       damage_caused_by: "",
       TAT_name_persons: "",
       outsourcer_company_name: null,
@@ -50,6 +51,7 @@ const claimsContainerModule = {
       filesDelete: [],
       insurance_declaration: null,
       insurance_declarationFile: null,
+      major: false,
       nature_of_damage: {
         id: 0,
         name: "",
@@ -65,8 +67,7 @@ const claimsContainerModule = {
       department: [],
       estimate: [],
     },
-    liability_letter_files_Data:[],
-
+    liability_letter_files_Data: [],
   },
   mutations: {
     /* SET_CLAiMS(state, containers) {
@@ -112,6 +113,7 @@ const claimsContainerModule = {
       state.editedOrSavedClaimContainer.claim_id = claim_id;
     },
     setCONTAINER_CLAiM(state, container) {
+      state.editedOrSavedClaimContainer.major = container.major;
       state.editedOrSavedClaimContainer.categorie_of_container =
         container.categorie_of_container;
 
@@ -121,15 +123,19 @@ const claimsContainerModule = {
       state.editedOrSavedClaimContainer.containerType = container.containerType;
 
       state.editedOrSavedClaimContainer.marchandise = container.marchandise;
-      state.editedOrSavedClaimContainer.marchandise_nature = container.marchandise_nature;
-      state.editedOrSavedClaimContainer.marchandise_type = container.marchandise_type;
+      state.editedOrSavedClaimContainer.marchandise_nature =
+        container.marchandise_nature;
+      state.editedOrSavedClaimContainer.marchandise_type =
+        container.marchandise_type;
 
       state.editedOrSavedClaimContainer.cause_damage = container.cause_damage;
+      state.editedOrSavedClaimContainer.damage_description =
+        container.damage_description;
       state.editedOrSavedClaimContainer.nature_of_damage_comment =
         container.nature_of_damage_comment;
-        state.editedOrSavedClaimContainer.companie.id = container.companie.id;
-        state.editedOrSavedClaimContainer.companie.name = container.companie.name;
-  
+      state.editedOrSavedClaimContainer.companie.id = container.companie.id;
+      state.editedOrSavedClaimContainer.companie.name = container.companie.name;
+
       state.editedOrSavedClaimContainer.nature_of_damage.id =
         container.nature_of_damage.id;
       state.editedOrSavedClaimContainer.shipping_line.id =
@@ -166,13 +172,10 @@ const claimsContainerModule = {
 
     setTHIRDPARTY_CONTAINER_CLAiM(state, thirdpartyClaim) {
       state.editedOrSavedClaimContainer.liability_letter_files =
-      thirdpartyClaim.liability_letter_files;
-    state.editedOrSavedClaimContainer.filesDelete =
-      thirdpartyClaim.filesDelete;
-
-     
+        thirdpartyClaim.liability_letter_files;
+      state.editedOrSavedClaimContainer.filesDelete =
+        thirdpartyClaim.filesDelete;
     },
-
 
     setREINVOICED_CONTAINER_CLAiM(state, thirdpartyClaim) {
       state.editedOrSavedClaimContainer.amount = thirdpartyClaim.amount;
@@ -187,8 +190,6 @@ const claimsContainerModule = {
       state.editedOrSavedClaimContainer.reimbursed_amount =
         thirdpartyClaim.reimbursed_amount;
       //
-
-      
     },
     setINSURANCE_FOLLOWUP_CONTAINER_CLAiM(state, insurance_followup) {
       state.editedOrSavedClaimContainer.date_of_declaration =
@@ -212,7 +213,7 @@ const claimsContainerModule = {
       state.editedOrSavedClaimContainer.insurance_declarationFile =
         insurance_followup.insurance_declarationFile;
 
-        state.editedOrSavedClaimContainer.insurance_declaration_files =
+      state.editedOrSavedClaimContainer.insurance_declaration_files =
         insurance_followup.insurance_declaration_files;
     },
 
@@ -220,9 +221,12 @@ const claimsContainerModule = {
       state.editedOrSavedClaimContainer.id = ContainerClaim.id;
       state.editedOrSavedClaimContainer.claim_id = ContainerClaim.claim_id;
 
-      state.editedOrSavedClaimContainer.marchandise = ContainerClaim.marchandise;
-      state.editedOrSavedClaimContainer.marchandise_nature = ContainerClaim.marchandise_nature;
-      state.editedOrSavedClaimContainer.marchandise_type = ContainerClaim.marchandise_type;
+      state.editedOrSavedClaimContainer.marchandise =
+        ContainerClaim.marchandise;
+      state.editedOrSavedClaimContainer.marchandise_nature =
+        ContainerClaim.marchandise_nature;
+      state.editedOrSavedClaimContainer.marchandise_type =
+        ContainerClaim.marchandise_type;
 
       state.editedOrSavedClaimContainer.containerID =
         ContainerClaim.containerID;
@@ -242,6 +246,8 @@ const claimsContainerModule = {
         ContainerClaim.categorie_of_container;
       state.editedOrSavedClaimContainer.cause_damage =
         ContainerClaim.cause_damage;
+      state.editedOrSavedClaimContainer.damage_description =
+        ContainerClaim.damage_description;
       state.editedOrSavedClaimContainer.equipement_registration =
         ContainerClaim.equipement_registration;
       state.editedOrSavedClaimContainer.Liability_letter_number =
@@ -262,13 +268,13 @@ const claimsContainerModule = {
         ContainerClaim.nature_of_damage.id;
       state.editedOrSavedClaimContainer.nature_of_damage.name =
         ContainerClaim.nature_of_damage.name;
-        state.editedOrSavedClaimContainer.companie.id =
+      state.editedOrSavedClaimContainer.companie.id =
         ContainerClaim.companie.id;
       state.editedOrSavedClaimContainer.shipping_line.id =
         ContainerClaim.shipping_line.id;
       state.editedOrSavedClaimContainer.shipping_line.name =
         ContainerClaim.shipping_line.name;
-        state.editedOrSavedClaimContainer.companie.name =
+      state.editedOrSavedClaimContainer.companie.name =
         ContainerClaim.companie.name;
       //third_party
       state.editedOrSavedClaimContainer.comment_third_party =
@@ -297,10 +303,10 @@ const claimsContainerModule = {
 
       //
       state.editedOrSavedClaimContainer.liability_letter_files =
-      ContainerClaim.liability_letter_files;
+        ContainerClaim.liability_letter_files;
 
       state.editedOrSavedClaimContainer.insurance_declaration_files =
-      ContainerClaim.insurance_declaration_files;
+        ContainerClaim.insurance_declaration_files;
 
       state.editedOrSavedClaimContainer.TAT_name_persons =
         ContainerClaim.TAT_name_persons;
@@ -317,6 +323,7 @@ const claimsContainerModule = {
       state.editedOrSavedClaimContainer.containerID = 0;
       state.editedOrSavedClaimContainer.nombre_of_containers = 0;
       state.editedOrSavedClaimContainer.containerType = "";
+      state.editedOrSavedClaimContainer.major = false;
 
       state.editedOrSavedClaimContainer.marchandise = "";
       state.editedOrSavedClaimContainer.marchandise_nature = "";
@@ -328,6 +335,7 @@ const claimsContainerModule = {
       state.editedOrSavedClaimContainer.Deductible_charge_TAT = "";
       state.editedOrSavedClaimContainer.categorie_of_container = "";
       state.editedOrSavedClaimContainer.cause_damage = "";
+      state.editedOrSavedClaimContainer.damage_description = "";
       state.editedOrSavedClaimContainer.damage_caused_by = "";
       state.editedOrSavedClaimContainer.equipement_registration = "";
       state.editedOrSavedClaimContainer.Liability_letter_number = "";
@@ -345,9 +353,9 @@ const claimsContainerModule = {
       state.editedOrSavedClaimContainer.companie.name = "";
 
       state.editedOrSavedClaimContainer.department = [];
-      state.editedOrSavedClaimContainer.liability_letter_files =[];
-      state.editedOrSavedClaimContainer.insurance_declaration_files =[];
-      state.editedOrSavedClaimContainer.liability_letter_files_Data =[];
+      state.editedOrSavedClaimContainer.liability_letter_files = [];
+      state.editedOrSavedClaimContainer.insurance_declaration_files = [];
+      state.editedOrSavedClaimContainer.liability_letter_files_Data = [];
       state.editedOrSavedClaimContainer.insurance_declaration = null;
       state.editedOrSavedClaimContainer.insurance_declarationFile = null;
 
@@ -376,11 +384,16 @@ const claimsContainerModule = {
     setInsuranceDeclarationToNull(state) {
       state.editedOrSavedClaimContainer.insurance_declaration = "";
     },
-    set_liability_letter_files_Data_container(state,liability_letter_files_Data){
+    set_liability_letter_files_Data_container(
+      state,
+      liability_letter_files_Data
+    ) {
       state.liability_letter_files_Data = liability_letter_files_Data;
-
     },
-    set_insurance_declaration_files_Data_container(state,insurance_declaration_files_Data){
+    set_insurance_declaration_files_Data_container(
+      state,
+      insurance_declaration_files_Data
+    ) {
       state.insurance_declaration_files_Data = insurance_declaration_files_Data;
     },
   },
@@ -428,11 +441,20 @@ const claimsContainerModule = {
           });
       });
     },
-    setliability_letter_files_Data_containerAction({ commit }, liability_letter_files) {
+    setliability_letter_files_Data_containerAction(
+      { commit },
+      liability_letter_files
+    ) {
       return new Promise((resolve, reject) => {
-        CustomizedAxios.post("LiabilityInsuranceFiles/container" , liability_letter_files)
+        CustomizedAxios.post(
+          "LiabilityInsuranceFiles/container",
+          liability_letter_files
+        )
           .then((response) => {
-            commit("set_liability_letter_files_Data_container", response.data.payload);
+            commit(
+              "set_liability_letter_files_Data_container",
+              response.data.payload
+            );
             resolve(response);
           })
           .catch((error) => {
@@ -440,10 +462,11 @@ const claimsContainerModule = {
           });
       });
     },
-    editedOrSavedContainerClaimAction({ commit }, claim,state) {
+    editedOrSavedContainerClaimAction({ commit }, claim, state) {
       return new Promise((resolve, reject) => {
         var claimFormData = new FormData();
 
+        claimFormData.append("major", claim.major);
         claimFormData.append("id", claim.id);
         claimFormData.append("claim_id", NullTest(claim.claim_id));
 
@@ -456,8 +479,14 @@ const claimsContainerModule = {
         claimFormData.append("containerType", NullTest(claim.containerType));
 
         claimFormData.append("marchandise", NullTest(claim.marchandise));
-        claimFormData.append("marchandise_nature", NullTest(claim.marchandise_nature));
-        claimFormData.append("marchandise_type", NullTest(claim.marchandise_type));
+        claimFormData.append(
+          "marchandise_nature",
+          NullTest(claim.marchandise_nature)
+        );
+        claimFormData.append(
+          "marchandise_type",
+          NullTest(claim.marchandise_type)
+        );
         //
         claimFormData.append(
           "categorie_of_container",
@@ -472,6 +501,10 @@ const claimsContainerModule = {
           NullTest(claim.equipement_registration)
         );
         claimFormData.append("cause_damage", NullTest(claim.cause_damage));
+        claimFormData.append(
+          "damage_description",
+          NullTest(claim.damage_description)
+        );
         claimFormData.append(
           "Liability_letter_number",
           NullTest(claim.Liability_letter_number)
@@ -569,7 +602,6 @@ const claimsContainerModule = {
           claim.liability_letter_files.map((item) => {
             claimFormData.append(`liability_letter_files[${i}]`, item);
             i++;
-
           });
         }
         if (claim.insurance_declaration_files?.length > 0) {
@@ -577,7 +609,6 @@ const claimsContainerModule = {
           claim.insurance_declaration_files.map((item) => {
             claimFormData.append(`insurance_declaration_files[${i}]`, item);
             i++;
-
           });
         }
         if (claim.filesDelete?.length > 0) {

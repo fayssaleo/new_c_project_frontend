@@ -100,7 +100,6 @@ export default {
           this.$router.push({
             name: "Claim",
           });
-          // console.error('ddddd', 'ddddd');
           window.location.reload();
         })
         .catch(() => {

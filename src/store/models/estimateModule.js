@@ -22,7 +22,6 @@ const estimateModule = {
       );
     },
     EDIT_ESTIMATE(state, estimate) {
-      console.info("estimate", estimate);
       state.estimates = state.estimates.map((c) => {
         if (c.estimate.id == estimate.estimate.id) return estimate;
         return c;
@@ -136,7 +135,6 @@ const estimateModule = {
         );
         estimateFormData.append("equipment_id", estimate.equipment_id);
         //estimateFormData.append("file", estimate.file);
-        console.error("estimate store", estimate);
         if (estimate.file != "create") {
           estimate.file.map((item) => {
             estimateFormData.append("files[]", item);
@@ -144,7 +142,6 @@ const estimateModule = {
         }
         estimateFormData.append("equipment_id", estimate.equipment_id);
         if (estimate.otherValuations.length > 0) {
-          console.warn("tag", "ccccc add");
           var i = 0;
 
           estimate.otherValuations.map((customedField) => {
@@ -208,7 +205,6 @@ const estimateModule = {
           });
         }
         if (estimate.otherValuations.length > 0) {
-          console.warn("tag", "ccccc add");
           var i = 0;
 
           estimate.otherValuations.map((customedField) => {
@@ -272,7 +268,6 @@ const estimateModule = {
           });
         }
         if (estimate.otherValuations.length > 0) {
-          console.warn("tag", "ccccc add");
           var i = 0;
 
           estimate.otherValuations.map((customedField) => {
@@ -336,7 +331,6 @@ const estimateModule = {
           });
         }
         if (estimate.otherValuations.length > 0) {
-          console.warn("tag", "ccccc add");
           var i = 0;
 
           estimate.otherValuations.map((customedField) => {
@@ -430,7 +424,6 @@ const estimateModule = {
             i++;
           });
         }
-        console.error("error estimate.estimate.otherValuations ", estimate);
         if (estimate.estimate.otherValuations.length > 0) {
           var i = 0;
           estimate.estimate.otherValuations.map((customedField) => {
@@ -466,8 +459,6 @@ const estimateModule = {
           });
         }
         if (estimate.deleteInputs.length > 0) {
-          console.warn("tag", "ccccc edite");
-
           var i = 0;
           estimate.deleteInputs.map((deleteInput) => {
             estimateFormData.append(`deleteInputs[${i}][id]`, deleteInput.id);
@@ -549,8 +540,6 @@ const estimateModule = {
           });
         }
         if (estimate.deleteInputs.length > 0) {
-          console.warn("tag", "ccccc edite");
-
           var i = 0;
           estimate.deleteInputs.map((deleteInput) => {
             estimateFormData.append(`deleteInputs[${i}][id]`, deleteInput.id);
@@ -634,8 +623,6 @@ const estimateModule = {
           });
         }
         if (estimate.deleteInputs.length > 0) {
-          console.warn("tag", "ccccc edite");
-
           var i = 0;
           estimate.deleteInputs.map((deleteInput) => {
             estimateFormData.append(`deleteInputs[${i}][id]`, deleteInput.id);
@@ -717,8 +704,6 @@ const estimateModule = {
           });
         }
         if (estimate.deleteInputs.length > 0) {
-          console.warn("tag", "ccccc edite");
-
           var i = 0;
           estimate.deleteInputs.map((deleteInput) => {
             estimateFormData.append(`deleteInputs[${i}][id]`, deleteInput.id);

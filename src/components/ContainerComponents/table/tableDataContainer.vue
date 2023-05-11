@@ -248,7 +248,7 @@ export default {
     editItem(item) {
       this.editedIndex = this.claims.indexOf(item) + 1;
       this.editedItem = Object.assign({}, item);
-      console.log("item", item);
+
       this.setAll_Attr_CONTAINER_CLAiMAction(item).then(() => {
         this.$router.push({ name: "AddclaimContainer" });
       });

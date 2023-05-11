@@ -8,17 +8,12 @@
         transition="scale-transition"
         type="error"
       >
-        Mandatory fields :<br />
+        Request Failed !<br />
         {{ alert_error_text }}
         <br />
 
         <v-btn @click="alert_error = false" elevation="2" color="primary">
-          <v-icon
-            large
-            class="mx-2 ma-2 mt-2"
-            color="white"
-            
-          >
+          <v-icon large class="mx-2 ma-2 mt-2" color="white">
             mdi-alpha-x
           </v-icon></v-btn
         >
@@ -31,12 +26,7 @@
       >
         success
         <v-btn @click="alert_success = false" elevation="2" color="primary">
-          <v-icon
-            large
-            class="mx-2 ma-2 mt-2"
-            color="white"
-            
-          >
+          <v-icon large class="mx-2 ma-2 mt-2" color="white">
             mdi-alpha-x
           </v-icon></v-btn
         >
@@ -70,15 +60,15 @@
             }"
             step="2"
           >
-          {{ this.geteditedOrSavedClaimContainer.damage_caused_by }}
+            {{ this.geteditedOrSavedClaimContainer.damage_caused_by }}
           </v-stepper-step>
           <v-divider></v-divider>
           <v-stepper-step editable :complete="e1 > 3" step="3">
-            Estimates 
+            Estimates
           </v-stepper-step>
           <v-divider></v-divider>
           <v-stepper-step editable :complete="e1 > 4" step="4">
-            Reinvoiced 
+            Reinvoiced
           </v-stepper-step>
           <v-divider></v-divider>
           <v-stepper-step editable step="5">
@@ -94,7 +84,7 @@
           <v-stepper-content step="2">
             <v-card class="mb-12" color="#f0f0f0cc" height="auto">
               <template>
-                <Thirdparty ref="ThirdpartyComponent"/>
+                <Thirdparty ref="ThirdpartyComponent" />
               </template>
             </v-card>
           </v-stepper-content>
@@ -112,7 +102,7 @@
           </v-stepper-content>
           <v-stepper-content step="5">
             <v-card class="mb-12 pa-4" color="#f0f0f0cc" height="auto">
-              <InsuranceFollowup ref="InsuranceFollowupComponent"/>
+              <InsuranceFollowup ref="InsuranceFollowupComponent" />
             </v-card>
           </v-stepper-content>
         </v-stepper-items>
@@ -152,7 +142,7 @@ export default {
     Claimdate,
     Thirdparty,
     InsuranceFollowup,
-    reinvoiced
+    reinvoiced,
   },
   data: () => ({
     e1: 1,
@@ -164,9 +154,8 @@ export default {
     modal: false,
     createdOrEdited: "Create",
     alert_error: false,
-    alert_error_text:"",
+    alert_error_text: "",
     alert_success: false,
-
   }),
   mounted() {
     document.title = "Claim";
@@ -209,7 +198,6 @@ export default {
       )
         .then(() => {
           // this.setModuleShowToFalseAction();
-          //console.log("save", "save");
         })
         .catch(() => {
           // this.setModuleShowToFalseAction();
@@ -241,13 +229,12 @@ export default {
       )
         .then(() => {
           this.setModuleShowToFalseAction();
-          this.alert_success=true;
-         // this.$refs.ThirdpartyComponent.resetFiles();
-         // this.$refs.InsuranceFollowupComponent.resetInputFile();
-          console.log("save", "save");
+          this.alert_success = true;
+          // this.$refs.ThirdpartyComponent.resetFiles();
+          // this.$refs.InsuranceFollowupComponent.resetInputFile();
         })
         .catch((error) => {
-          this.alert_error=true;
+          this.alert_error = true;
           var messageObject = JSON.parse(
             error.message.replace(" on unknown line", "")
           );

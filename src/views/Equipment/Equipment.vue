@@ -218,7 +218,6 @@ export default {
       this.editedItem = Object.assign({}, item);
       this.setAll_Attr_EQUIPMENT_CLAiMAction(item)
         .then(() => {
-          console.log("item", item);
           this.$router.push({ name: "Addclaim" });
         })
         .catch((e) => {});
@@ -269,7 +268,7 @@ export default {
         this.addDepartementAction(this.editedItem).then(() => {
           this.departements = [...this.getdepartements];
         });
-        
+
         this.closeAddSaveDialog();
       } else {
         this.editDepartementAction(this.editedItem).then(() => {

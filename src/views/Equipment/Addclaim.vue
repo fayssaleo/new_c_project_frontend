@@ -9,17 +9,12 @@
         transition="scale-transition"
         type="error"
       >
-        Mandatory fields :<br />
+        Request Failed !<br />
         {{ alert_error_text }}
         <br />
 
         <v-btn @click="alert_error = false" elevation="2" color="primary">
-          <v-icon
-            large
-            class="mx-2 ma-2 mt-2"
-            color="white"
-            
-          >
+          <v-icon large class="mx-2 ma-2 mt-2" color="white">
             mdi-alpha-x
           </v-icon></v-btn
         >
@@ -32,12 +27,7 @@
       >
         success
         <v-btn @click="alert_success = false" elevation="2" color="primary">
-          <v-icon
-            large
-            class="mx-2 ma-2 mt-2"
-            color="white"
-            
-          >
+          <v-icon large class="mx-2 ma-2 mt-2" color="white">
             mdi-alpha-x
           </v-icon></v-btn
         >
@@ -48,7 +38,7 @@
       <v-stepper v-model="e1">
         <v-stepper-header>
           <v-stepper-step editable :complete="e1 > 1" step="1">
-            Equipment And Damage
+            Equipment
           </v-stepper-step>
 
           <v-divider></v-divider>
@@ -165,7 +155,7 @@ export default {
     createdOrEdited: "Create",
     alert_error: false,
     alert_success: false,
-    alert_error_text:"",
+    alert_error_text: "",
   }),
   mounted() {
     document.title = "Claim";
@@ -206,7 +196,6 @@ export default {
       )
         .then(() => {
           // this.setModuleShowToFalseAction();
-          //console.log("save", "save");
         })
         .catch(() => {
           // this.setModuleShowToFalseAction();
@@ -231,7 +220,6 @@ export default {
           this.setModuleShowToFalseAction();
           this.alert_success = true;
 
-          console.log("save", "save");
           // this.$refs.ThirdpartyComponent.resetFiles();
           //  this.$refs.InsuranceFollowupComponent.resetInputFile();
         })
@@ -252,7 +240,6 @@ export default {
             this.isUndefined(messageObject?.damage_caused_by);
 
           this.setModuleShowToFalseAction();
-          //console.log("errorr ", JSON.parse(error.message.replace(" on unknown line","")).type_of_equipment_id);
         });
     },
     isUndefined(item) {

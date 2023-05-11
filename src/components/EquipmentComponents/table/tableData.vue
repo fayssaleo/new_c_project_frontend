@@ -357,7 +357,6 @@ export default {
 
       this.setAll_Attr_EQUIPMENT_CLAiMAction(item)
         .then(() => {
-          console.log("item", item);
           this.$router.push({ name: "Addclaim" });
           //this.dialogAdd=true;
         })
